@@ -1,0 +1,702 @@
+local voucher_atlas = {
+	object_type = "Atlas",
+	key = "atlasvoucher",
+	path = "atlasvoucher.png",
+	px = 71,
+	py = 95,
+}
+local copies = {
+	object_type = "Voucher",
+	key = "copies",
+	atlas = "atlasvoucher",
+	pos = { x = 1, y = 1 },
+	loc_vars = function(self, info_queue)
+		--info_queue[#info_queue+1] = {set = "Tag", key = "tag_double"}
+		--info_queue[#info_queue+1] = {set = "Tag", key = "tag_cry_triple", specific_vars = {2}}
+		return { vars = {} }
+	end,
+}
+local tag_printer = {
+	object_type = "Voucher",
+	key = "tag_printer",
+	atlas = "atlasvoucher",
+	pos = { x = 1, y = 2 },
+	loc_vars = function(self, info_queue)
+		--info_queue[#info_queue+1] = {set = "Tag", key = "tag_double"}
+		--info_queue[#info_queue+1] = {set = "Tag", key = "tag_cry_quadruple", specific_vars = {3}}
+		return { vars = {} }
+	end,
+	requires = { "v_cry_copies" },
+}
+local clone_machine = {
+	object_type = "Voucher",
+	key = "clone_machine",
+	atlas = "atlasvoucher",
+	pos = { x = 1, y = 3 },
+	loc_vars = function(self, info_queue)
+		--info_queue[#info_queue+1] = {set = "Tag", key = "tag_double"}
+		--info_queue[#info_queue+1] = {set = "Tag", key = "tag_cry_quintuple", specific_vars = {4}}
+		return { vars = {} }
+	end,
+	requires = { "v_cry_tag_printer" },
+}
+local command_prompt = {
+	object_type = "Voucher",
+	key = "command_prompt",
+	atlas = "atlasvoucher",
+	pos = { x = 0, y = 1 },
+	loc_vars = function(self, info_queue)
+		return { vars = {} }
+	end,
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.code_rate = 4
+				return true
+			end,
+		}))
+	end,
+}
+local satellite_uplink = {
+	object_type = "Voucher",
+	key = "satellite_uplink",
+	atlas = "atlasvoucher",
+	pos = { x = 0, y = 2 },
+	loc_vars = function(self, info_queue)
+		return { vars = {} }
+	end,
+	requires = { "v_cry_command_prompt" },
+}
+local quantum_computing = {
+	object_type = "Voucher",
+	key = "quantum_computing",
+	atlas = "atlasvoucher",
+	pos = { x = 0, y = 3 },
+	loc_vars = function(self, info_queue)
+		return { vars = {} }
+	end,
+	requires = { "v_cry_satellite_uplink" },
+}
+local pairing = {
+	object_type = "Voucher",
+	key = "pairing",
+	atlas = "atlasvoucher",
+	pos = { x = 0, y = 0 },
+	cry_credits = {
+		colour = G.C.CRY_JOLLY,
+		text = {
+			"Jolly Open Winner",
+			"Xaltios",
+		},
+	},
+}
+local repair_man = {
+	object_type = "Voucher",
+	key = "repair_man",
+	atlas = "atlasvoucher",
+	pos = { x = 1, y = 0 },
+	requires = { "v_cry_pairing" },
+	cry_credits = {
+		colour = G.C.CRY_JOLLY,
+		text = {
+			"Jolly Open Winner",
+			"Xaltios",
+		},
+	},
+}
+local pairamount_plus = {
+	object_type = "Voucher",
+	key = "pairamount_plus",
+	atlas = "atlasvoucher",
+	pos = { x = 2, y = 0 },
+	requires = { "v_cry_repair_man" },
+	cry_credits = {
+		colour = G.C.CRY_JOLLY,
+		text = {
+			"Jolly Open Winner",
+			"Xaltios",
+		},
+	},
+}
+local double_vision = {
+	object_type = "Voucher",
+	key = "double_vision",
+	atlas = "atlasvoucher",
+	pos = { x = 4, y = 3 },
+	loc_vars = function(self, info_queue)
+		info_queue[#info_queue + 1] = G.P_CENTERS.e_cry_double_sided
+	end,
+	cry_credits = {
+		colour = G.C.CRY_JOLLY,
+		text = {
+			"Jolly Open Winner",
+			"Axolotolus",
+		},
+	},
+}
+local double_slit = {
+	object_type = "Voucher",
+	key = "double_slit",
+	atlas = "atlasvoucher",
+	pos = { x = 3, y = 4 },
+	requires = { "v_cry_double_vision" },
+	loc_vars = function(self, info_queue)
+		info_queue[#info_queue + 1] = G.P_CENTERS.c_cry_meld
+	end,
+	cry_credits = {
+		colour = G.C.CRY_JOLLY,
+		text = {
+			"Jolly Open Winner",
+			"Axolotolus",
+		},
+	},
+}
+local double_down = {
+	object_type = "Voucher",
+	key = "double_down",
+	atlas = "atlasvoucher",
+	pos = { x = 4, y = 4 },
+	requires = { "v_cry_double_slit" },
+	loc_vars = function(self, info_queue)
+		info_queue[#info_queue + 1] = G.P_CENTERS.e_cry_double_sided
+	end,
+	cry_credits = {
+		colour = G.C.CRY_JOLLY,
+		text = {
+			"Jolly Open Winner",
+			"Axolotolus",
+		},
+	},
+}
+local overstock_multi = {
+	object_type = "Voucher",
+	key = "overstock_multi",
+	config = { extra = 1 },
+	atlas = "atlasvoucher",
+	pos = { x = 4, y = 1 },
+	requires = { "v_overstock_plus" },
+	loc_vars = function(self, info_queue)
+		return { vars = { math.max(1, math.floor(self.config.extra)) } }
+	end,
+	redeem = function(self)
+		if not G.GAME.modifiers.cry_booster_packs then
+			G.GAME.modifiers.cry_booster_packs = 2
+		end
+		G.GAME.modifiers.cry_booster_packs = G.GAME.modifiers.cry_booster_packs
+			+ math.max(1, math.floor(self.config.extra)) --Booster slots
+		G.E_MANAGER:add_event(Event({
+			func = function() --card slot
+				change_shop_size(math.max(1, math.floor(self.config.extra)))
+				return true
+			end,
+		}))
+	end,
+}
+local massproduct = {
+	object_type = "Voucher",
+	key = "massproduct",
+	atlas = "atlasvoucher",
+	pos = { x = 6, y = 4 },
+	requires = { "v_liquidation" },
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.discount_percent = 100
+				for k, v in pairs(G.I.CARD) do
+					if v.set_cost then
+						v:set_cost()
+					end
+				end
+				return true
+			end,
+		}))
+	end,
+}
+local curate = {
+	object_type = "Voucher",
+	key = "curate",
+	atlas = "atlasvoucher",
+	pos = { x = 6, y = 1 },
+	requires = { "v_glow_up" },
+}
+local rerollexchange = {
+	object_type = "Voucher",
+	key = "rerollexchange",
+	atlas = "atlasvoucher",
+	pos = { x = 6, y = 2 },
+	requires = { "v_reroll_glut" },
+	redeem = function(self)
+		--most of the code for this (one line) is in cryptid.lua, check out the reroll function there
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				if G.GAME.current_round.reroll_cost > 2 then
+					G.GAME.current_round.reroll_cost = 2
+				end
+				return true
+			end,
+		}))
+	end,
+}
+local scope = {
+	object_type = "Voucher",
+	key = "scope",
+	atlas = "atlasvoucher",
+	pos = { x = 2, y = 0 },
+	requires = { "v_observatory" },
+}
+local dexterity = {
+	object_type = "Voucher",
+	key = "dexterity",
+	config = { extra = 2 },
+	atlas = "atlasvoucher",
+	pos = { x = 6, y = 3 },
+	requires = { "v_nacho_tong" },
+	loc_vars = function(self, info_queue)
+		return { vars = { math.max(1, math.floor(self.config.extra)) } }
+	end,
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.round_resets.hands = G.GAME.round_resets.hands + math.max(1, math.floor(self.config.extra))
+				ease_hands_played(math.max(1, math.floor(self.config.extra)))
+				return true
+			end,
+		}))
+	end,
+}
+local threers = {
+	object_type = "Voucher",
+	key = "threers",
+	config = { extra = 2 },
+	atlas = "atlasvoucher",
+	pos = { x = 5, y = 0 },
+	requires = { "v_recyclomancy" },
+	loc_vars = function(self, info_queue)
+		return { vars = { math.max(1, math.floor(self.config.extra)) } }
+	end,
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.round_resets.discards = G.GAME.round_resets.discards + math.max(1, math.floor(self.config.extra))
+				ease_discard(math.max(1, math.floor(self.config.extra)))
+				return true
+			end,
+		}))
+	end,
+}
+local tacclimator = {
+	object_type = "Voucher",
+	key = "tacclimator",
+	config = { extra = 56 / 4, extra_disp = 6 }, --blame thunk for this extra value
+	atlas = "atlasvoucher",
+	pos = { x = 1, y = 4 },
+	requires = { "v_tarot_tycoon" },
+	loc_vars = function(self, info_queue)
+		return { vars = { self.config.extra_disp } }
+	end,
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.tarot_rate = 4 * self.config.extra
+				return true
+			end,
+		}))
+	end,
+}
+local pacclimator = {
+	object_type = "Voucher",
+	key = "pacclimator",
+	config = { extra = 56 / 4, extra_disp = 6 }, --blame thunk for this extra value
+	atlas = "atlasvoucher",
+	pos = { x = 0, y = 4 },
+	requires = { "v_planet_tycoon" },
+	loc_vars = function(self, info_queue)
+		return { vars = { self.config.extra_disp } }
+	end,
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.planet_rate = 4 * self.config.extra
+				return true
+			end,
+		}))
+	end,
+}
+local moneybean = {
+	object_type = "Voucher",
+	key = "moneybean",
+	config = { extra = 1e300 },
+	atlas = "atlasvoucher",
+	pos = { x = 5, y = 1 },
+	requires = { "v_money_tree" },
+	loc_vars = function(self, info_queue)
+		return { vars = { self.config.extra / 5 } }
+	end,
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.interest_cap = self.config.extra
+				return true
+			end,
+		}))
+	end,
+}
+local fabric = {
+	object_type = "Voucher",
+	key = "fabric",
+	config = { extra = 2 },
+	atlas = "atlasvoucher",
+	pos = { x = 6, y = 0 },
+	requires = { "v_antimatter" },
+	loc_vars = function(self, info_queue)
+		return { vars = { math.max(1, math.floor(self.config.extra)) } }
+	end,
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				if G.jokers then
+					G.jokers.config.card_limit = G.jokers.config.card_limit + math.max(1, math.floor(self.config.extra))
+				end
+				return true
+			end,
+		}))
+	end,
+}
+
+local function asteroglyph_ante()
+	if not (G.GAME or {}).modifiers then
+		return 0
+	end
+	if not G.GAME.modifiers.cry_astero_ante then
+		G.GAME.modifiers.cry_astero_ante = 0
+	end
+	return G.GAME.modifiers.cry_astero_ante
+end
+
+local asteroglyph = {
+	object_type = "Voucher",
+	key = "asteroglyph",
+	atlas = "atlasvoucher",
+	pos = { x = 5, y = 2 },
+	requires = { "v_petroglyph" },
+	loc_vars = function(self, info_queue)
+		return { vars = { asteroglyph_ante() } }
+	end,
+	redeem = function(self)
+		local mod = -G.GAME.round_resets.ante + asteroglyph_ante()
+		ease_ante(mod)
+		G.GAME.modifiers.cry_astero_ante = (G.GAME.modifiers.cry_astero_ante or 0) > 0
+				and math.min(math.ceil(G.GAME.modifiers.cry_astero_ante ^ 1.13), 1e300)
+			or 1
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.round_resets.blind_ante = mod
+				return true
+			end,
+		}))
+	end,
+}
+
+local blankcanvas = {
+	object_type = "Voucher",
+	key = "blankcanvas",
+	config = { extra = 2 },
+	atlas = "atlasvoucher",
+	pos = { x = 2, y = 4 },
+	requires = { "v_palette" },
+	loc_vars = function(self, info_queue)
+		return { vars = { math.max(1, math.floor(self.config.extra)) } }
+	end,
+	redeem = function(self)
+		G.hand:change_size(math.max(1, math.floor(self.config.extra)))
+	end,
+}
+
+local stickyhand = {
+	object_type = "Voucher",
+	key = "stickyhand",
+	config = { extra = 1 },
+	atlas = "atlasvoucher",
+	pos = { x = 0, y = 5 },
+	loc_vars = function(self, info_queue)
+		return { vars = { math.max(1, math.floor(self.config.extra)) } }
+	end,
+	redeem = function(self)
+  G.hand.config.highlighted_limit = G.hand.config.highlighted_limit
+		+ math.max(1, math.floor(self.config.extra))
+	end,
+}
+
+local grapplinghook = {
+	object_type = "Voucher",
+	key = "grapplinghook",
+	config = { extra = 1 },
+	atlas = "atlasvoucher",
+	pos = { x = 1, y = 5 },
+	requires = { "v_cry_stickyhand" },
+	loc_vars = function(self, info_queue)
+		return { vars = { math.max(1, math.floor(self.config.extra)) } }
+	end,
+	redeem = function(self)
+  G.hand.config.highlighted_limit = G.hand.config.highlighted_limit
+		+ math.max(1, math.floor(self.config.extra))
+	end,
+}
+
+local hyperspacetether = {
+	object_type = "Voucher",
+	key = "hyperspacetether",
+	config = { extra = 2 },
+	atlas = "atlasvoucher",
+	pos = { x = 2, y = 5 },
+	requires = { "v_cry_grapplinghook" },
+	loc_vars = function(self, info_queue)
+		return { vars = { math.max(1, math.floor(self.config.extra)) } }
+	end,
+	redeem = function(self)
+  G.hand.config.highlighted_limit = G.hand.config.highlighted_limit
+		+ math.max(1, math.floor(self.config.extra))
+	end,
+}
+
+
+local triple = { --Copies voucher triple tag
+	object_type = "Tag",
+	atlas = "tag_cry",
+	pos = { x = 0, y = 1 },
+	config = { type = "tag_add", num = 2 },
+	key = "triple",
+	loc_vars = function(self, info_queue)
+		return { vars = { self.config.num } }
+	end,
+	apply = function(tag, context)
+		if
+			context.type == "tag_add"
+			and context.tag.key ~= "tag_double"
+			and context.tag.key ~= "tag_cry_triple"
+			and context.tag.key ~= "tag_cry_quadruple"
+			and context.tag.key ~= "tag_cry_quintuple"
+			and context.tag.key ~= "tag_cry_memory"
+		then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep("+", G.C.RED, function()
+				if context.tag.ability and context.tag.ability.orbital_hand then
+					G.orbital_hand = context.tag.ability.orbital_hand
+				end
+				for i = 1, tag.config.num do
+					add_tag(Tag(context.tag.key))
+				end
+				G.orbital_hand = nil
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+		end
+		return true
+	end,
+	in_pool = function()
+		return G.GAME.used_vouchers.v_cry_copies
+	end,
+}
+local quadruple = { --Tag printer voucher quadruple tag
+	object_type = "Tag",
+	atlas = "tag_cry",
+	pos = { x = 1, y = 1 },
+	config = { type = "tag_add", num = 3 },
+	key = "quadruple",
+	loc_vars = function(self, info_queue)
+		return { vars = { self.config.num } }
+	end,
+	apply = function(tag, context)
+		if
+			context.type == "tag_add"
+			and context.tag.key ~= "tag_double"
+			and context.tag.key ~= "tag_cry_triple"
+			and context.tag.key ~= "tag_cry_quadruple"
+			and context.tag.key ~= "tag_cry_quintuple"
+			and context.tag.key ~= "tag_cry_memory"
+		then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep("+", G.C.RED, function()
+				if context.tag.ability and context.tag.ability.orbital_hand then
+					G.orbital_hand = context.tag.ability.orbital_hand
+				end
+				for i = 1, tag.config.num do
+					add_tag(Tag(context.tag.key))
+				end
+				G.orbital_hand = nil
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+		end
+		return true
+	end,
+	in_pool = function()
+		return G.GAME.used_vouchers.v_cry_tag_printer
+	end,
+}
+local quintuple = { --Clone machine voucher quintuple tag
+	object_type = "Tag",
+	atlas = "tag_cry",
+	pos = { x = 2, y = 1 },
+	config = { type = "tag_add", num = 4 },
+	key = "quintuple",
+	loc_vars = function(self, info_queue)
+		return { vars = { self.config.num } }
+	end,
+	apply = function(tag, context)
+		if
+			context.type == "tag_add"
+			and context.tag.key ~= "tag_double"
+			and context.tag.key ~= "tag_cry_triple"
+			and context.tag.key ~= "tag_cry_quadruple"
+			and context.tag.key ~= "tag_cry_quintuple"
+			and context.tag.key ~= "tag_cry_memory"
+		then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep("+", G.C.RED, function()
+				if context.tag.ability and context.tag.ability.orbital_hand then
+					G.orbital_hand = context.tag.ability.orbital_hand
+				end
+				for i = 1, tag.config.num do
+					add_tag(Tag(context.tag.key))
+				end
+				G.orbital_hand = nil
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+		end
+		return true
+	end,
+	in_pool = function()
+		return G.GAME.used_vouchers.v_cry_clone_machine
+	end,
+}
+
+-- If Tier 3 Vouchers is loaded, make Cryptid function as Tier 4 Vouchers
+if SMODS.Mods["Tier3Sub"] then
+	overstock_multi.requires[#overstock_multi.requires + 1] = "v_overstock_three"
+	massproduct.requires[#massproduct.requires + 1] = "v_money_mint"
+	curate.requires[#curate.requires + 1] = "v_glow_in_dark"
+	rerollexchange.requires[#rerollexchange.requires + 1] = "v_reroll_addict"
+	dexterity.requires[#dexterity.requires + 1] = "v_applause"
+	threers.requires[#threers.requires + 1] = "v_down_to_zero"
+	tacclimator.requires[#tacclimator.requires + 1] = "v_tarot_factory"
+	pacclimator.requires[#pacclimator.requires + 1] = "v_planet_factory"
+	moneybean.requires[#moneybean.requires + 1] = "v_money_forest"
+	fabric.requires[#fabric.requires + 1] = "v_neutral_particle"
+	asteroglyph.requires[#asteroglyph.requires + 1] = "v_in_the_beginning"
+	blankcanvas.requires[#blankcanvas.requires + 1] = "v_happy_accident"
+	tacclimator.config.extra = tacclimator.config.extra * 8
+	pacclimator.config.extra = pacclimator.config.extra * 8
+end
+local voucheritems = {
+	voucher_atlas,
+	copies,
+	tag_printer,
+	triple,
+	quadruple,
+	quintuple,
+	overstock_multi,
+	massproduct,
+	curate,
+	rerollexchange,
+	dexterity,
+	threers,
+	tacclimator,
+	pacclimator,
+	moneybean,
+	fabric,
+	asteroglyph,
+	blankcanvas,
+	clone_machine,
+	stickyhand,
+	grapplinghook,
+	hyperspacetether
+}
+if Cryptid.enabled["Code Cards"] then --tweak this later since I want command prompt/satellite uplink in the same space as the other vouchers
+	voucheritems[#voucheritems + 1] = command_prompt
+	voucheritems[#voucheritems + 1] = satellite_uplink
+	voucheritems[#voucheritems + 1] = quantum_computing
+end
+if Cryptid.enabled["M Jokers"] then
+	voucheritems[#voucheritems + 1] = pairing
+	voucheritems[#voucheritems + 1] = repair_man
+	voucheritems[#voucheritems + 1] = pairamount_plus
+end
+if Cryptid.enabled["Misc."] then
+	voucheritems[#voucheritems + 1] = double_vision
+	voucheritems[#voucheritems + 1] = double_slit
+	voucheritems[#voucheritems + 1] = double_down
+end
+return {
+	name = "Vouchers",
+	init = function()
+		--Curate
+		local pe = poll_edition
+		function poll_edition(_key, _mod, _no_neg, _guaranteed, _options)
+			local ed = pe(_key, _mod, _no_neg, _guaranteed, _options)
+			while not ed and G.GAME.used_vouchers.v_cry_curate do
+				ed = pe(_key, _mod, _no_neg, _guaranteed, _options)
+			end
+			return ed
+		end
+		--Copies and upgrades
+		local gcp = get_current_pool
+		function get_current_pool(type, rarity, legendary, append, z)
+			pool, pool_append = gcp(type, rarity, legendary, append, z)
+			if type == "Tag" then
+				for i = 1, #pool do
+					if pool[i] == "tag_double" and G.GAME.used_vouchers.v_cry_copies then
+						pool[i] = "tag_cry_triple"
+					end
+					if
+						(pool[i] == "tag_double" or pool[i] == "tag_cry_triple")
+						and G.GAME.used_vouchers.v_cry_tag_printer
+					then
+						pool[i] = "tag_cry_quadruple"
+					end
+					if
+						(pool[i] == "tag_double" or pool[i] == "tag_cry_triple" or pool[i] == "tag_cry_quadruple")
+						and G.GAME.used_vouchers.v_cry_clone_machine
+					then
+						pool[i] = "tag_cry_quintuple"
+					end
+				end
+			end
+			return pool, pool_append
+		end
+		local tinit = Tag.init
+		function Tag:init(tag, y, z)
+			if tag == "tag_double" and G.GAME.used_vouchers.v_cry_copies then
+				tag = "tag_cry_triple"
+			end
+			if (tag == "tag_double" or tag == "tag_cry_triple") and G.GAME.used_vouchers.v_cry_tag_printer then
+				tag = "tag_cry_quadruple"
+			end
+			if
+				(tag == "tag_double" or tag == "tag_cry_triple" or tag == "tag_cry_quadruple")
+				and G.GAME.used_vouchers.v_cry_clone_machine
+			then
+				tag = "tag_cry_quintuple"
+			end
+			return tinit(self, tag, y, z)
+		end
+		local sc = Card.set_cost
+		function Card:set_cost()
+			sc(self)
+			if self.ability.set == "Tarot" and G.GAME.used_vouchers.v_cry_tacclimator then --Make Tarots free when Tarot Acclimator is redeemed
+				self.cost = 0
+			end
+			if self.ability.set == "Planet" and G.GAME.used_vouchers.v_cry_pacclimator then --Make Planets free when Planet Acclimator is redeemed
+				self.cost = 0
+			end
+		end
+	end,
+	items = voucheritems,
+}
